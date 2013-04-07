@@ -2,7 +2,6 @@
 // Detect the app root (taken from api/resources/index.php)
 $appRoot = trim(dirname($_SERVER['SCRIPT_NAME']), '/');
 $appRoot = '/' . ltrim($appRoot . '/', '/');
-
 $appcacheUpdate = !!isset($_COOKIE['appcacheUpdate']);
 ?>
 <!DOCTYPE html>
@@ -81,7 +80,6 @@ $appcacheUpdate = !!isset($_COOKIE['appcacheUpdate']);
 	<?php } else {
 		require_once('server/templates.php');
 		require_once('server/application/applicationcontroller.php');
-
 		$applicationController = new ApplicationController();
 		echo Templates::application($applicationController->route($_SERVER['REQUEST_URI']));
 	} ?>
