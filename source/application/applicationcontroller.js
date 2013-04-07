@@ -35,40 +35,29 @@ APP.applicationController = (function () {
         APP.articlesController.showArticle(id);
     }
 
-    function route() {
-        var page = window.location.hash;
-        if (page) {
-            page = page.substring(1);
-        }
-        if (page.length > 0) {
-            if (parseInt(page, 10) > 0) {
-                showArticle(parseInt(page, 10));
+    function route(page) {
+        page = page || '';
+        if (page.length > 1) {
+            if (parseInt(page.substring(1), 10) > 0) {
+                showArticle(parseInt(page.substring(1), 10));
             } else {
                 pageNotFound();
+                page = '/error';
             }
         } else {
             showHome();
         }
+        window.history.pushState(null, null, page);
     }
 
     function initialize(resources, contentAlreadyLoaded) {
 
-        // Listen to the hash tag changing
-        if ("onhashchange" in window) {
-            $(window).bind("hashchange", route);
-
-        // Support for old IE (which didn't have hash change)
-        } else {
-            (function () {
-                var lastHash = window.location.hash;
-                window.setInterval(function () {
-                    if (window.location.hash !== lastHash) {
-                        lastHash = window.location.hash;
-                        route();
-                    }
-                }, 100);
-            }());
-        }
+        // Listen to the URL link clicks
+        $(document).on('click', 'a', function (event) {
+            event.stopPropagation();
+            event.preventDefault();
+            route(this.getAttribute('href'));
+        });
 
         // Set up FastClick
         fastClick = new FastClick(document.body);
@@ -98,6 +87,15 @@ APP.applicationController = (function () {
     // This is to our webapp what main() is to C, $(document).ready is to jQuery, etc
     function start(resources, storeResources, contentAlreadyLoaded) {
 
+        // As a bare minimum we need History API to
+        // run the advanced features of this app
+        // so detect it here (adapted from Modernizr)
+        if (!historyAPI()) return;
+
+        window.addEventListener("popstate", function(e) {
+            route(location.pathname);
+        });
+
         // When indexedDB available, use it!
         APP.indexedDB.start(function indexedDBSuccess() {
             APP.database = APP.indexedDB;
@@ -124,12 +122,34 @@ APP.applicationController = (function () {
     }
 
     function startFromServer() {
+
+        // As a bare minimum we need History API to
+        // run the advanced features of this app
+        // so detect it here (adapted from Modernizr)
+        if (!historyAPI()) return;
         $.ajax('/api/resources/', {
             dataType: 'json',
             success: function (data) {
                 start(data, true, true);
             }
         });
+    }
+
+    function historyAPI() {
+        var ua = navigator.userAgent;
+
+        // We only want Android 2, stock browser, and not Chrome which identifies
+        // itself as 'Mobile Safari' as well
+        if (ua.indexOf('Android 2') !== -1 &&
+            ua.indexOf('Mobile Safari') !== -1 &&
+                ua.indexOf('Chrome') === -1) {
+            return false;
+        }
+
+        // Return the regular check
+        if (window.history && 'pushState' in history) {
+            return true;
+        }
     }
 
     return {
