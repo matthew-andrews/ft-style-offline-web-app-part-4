@@ -154,6 +154,7 @@ APP.applicationController = (function () {
 
     return {
         start: start,
-        startFromServer: startFromServer
+        startFromServer: startFromServer,
+        route: route
     };
 }());
