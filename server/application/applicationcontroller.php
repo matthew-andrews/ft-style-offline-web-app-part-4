@@ -13,12 +13,6 @@ class ApplicationController {
 	    return $articlesController->showArticle($id);
 	}
 
-	public function showError() {
-
-		// TODO
-		throw new Exception("Need to do the error page");
-	}
-
 	public function route($page) {
 		$page = trim($page, '/');
 	    if (strlen($page)) {
