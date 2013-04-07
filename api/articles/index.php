@@ -1,6 +1,5 @@
 <?php
 // Convert RSS feed to JSON, stripping out all but basic HTML
-// Using Guardian Technology feed as it contains the full content
 $rss = new SimpleXMLElement(file_get_contents('http://feeds2.feedburner.com/ft/tech-blog'));
 
 

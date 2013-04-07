@@ -2,7 +2,7 @@
 class Templates {
 
     public static function application($content) {
-		return '<div id="window"><div id="header"><h1>Guardian Technology News</h1></div><div id="body">' . $content .'</div></div>';
+		return '<div id="window"><div id="header"><h1>FT Tech Blog</h1></div><div id="body">' . $content .'</div></div>';
     }
 
     public static function home($headlines) {
