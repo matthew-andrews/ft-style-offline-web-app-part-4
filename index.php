@@ -2,7 +2,7 @@
 // Detect the app root (taken from api/resources/index.php)
 $appRoot = trim(dirname($_SERVER['SCRIPT_NAME']), '/');
 $appRoot = '/' . ltrim($appRoot . '/', '/');
-$appcacheUpdate = !!isset($_COOKIE['appcacheUpdate']);
+$appcacheUpdate = isset($_COOKIE['appcacheUpdate']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
