@@ -2,12 +2,17 @@
 // Detect the app root (taken from api/resources/index.php)
 $appRoot = trim(dirname($_SERVER['SCRIPT_NAME']), '/');
 $appRoot = '/' . ltrim($appRoot . '/', '/');
+
+
+ini_set("display_errors", "On");
+$appcacheUpdate = !!isset($_COOKIE['appcacheUpdate']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
 		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
 		<script type="text/javascript" src="<?php echo $appRoot; ?>jquery.min.js"></script>
+		<?php if ($appcacheUpdate) { ?>
 		<script type="text/javascript">
 			$(document).ready(function () {
 
@@ -61,9 +66,26 @@ $appRoot = '/' . ltrim($appRoot . '/', '/');
 
 			});
 		</script>
+		<?php } else { ?>
+		<link href="<?php echo $appRoot; ?>css/global.css" media="all" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="<?php $appRoot; ?>api/resources/javascript.php"></script>
+		<script type="text/javascript">
+		$(document).ready(function () {
+			APP.applicationController.startFromServer();
+		});
+		</script>
+		<?php } ?>
 		<title>News</title>
 	</head>
 <body>
+	<?php if ($appcacheUpdate) { ?>
 	<div id="loading">Loading&hellip;</div>
+	<?php } else {
+		require_once('server/templates.php');
+		require_once('server/application/applicationcontroller.php');
+
+		$applicationController = new ApplicationController();
+		echo Templates::application($applicationController->route($_SERVER['REQUEST_URI']));
+	} ?>
 </body>
 </html>

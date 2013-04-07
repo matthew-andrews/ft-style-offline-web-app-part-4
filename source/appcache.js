@@ -21,6 +21,10 @@ APP.appcache = (function () {
 	}, offlineEnabled;
 
 	function innerLoad() {
+
+		// 5 minutes in the future
+		var cookieExpires = new Date(new Date().getTime() + 60 * 5 * 1000);
+		document.cookie = "appcacheUpdate=1;expires=" + cookieExpires.toGMTString();
 		var iframe = document.createElement('IFRAME');
 		iframe.setAttribute('style', 'width:0px; height:0px; visibility:hidden; position:absolute; border:none');
 		iframe.src = APP_ROOT + 'manifest.html';
@@ -29,11 +33,15 @@ APP.appcache = (function () {
 	}
 
 	function logEvent(evtcode, hasChecked) {
-		var s = statuses[evtcode], loaderEl;
+		var s = statuses[evtcode], loaderEl, cookieExpires;
 		if (hasChecked || s === 'timeout') {
 			if (s === 'uncached' || s === 'idle' || s === 'obsolete' || s === 'timeout' || s === 'updateready') {
 				loaderEl = document.getElementById('appcacheloader');
 				loaderEl.parentNode.removeChild(loaderEl);
+
+				// Remove appcacheUpdate cookie
+				cookieExpires = new Date(new Date().getTime() - 60 * 5 * 1000);
+				document.cookie = "appcacheUpdate=;expires=" + cookieExpires.toGMTString();
 			}
 		}
 	}

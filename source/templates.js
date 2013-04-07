@@ -17,7 +17,7 @@ APP.templates = (function () {
             return '<p><i>No articles have been found, maybe you haven\'t <b>refreshed the news</b>?</i></p>';
         }
         for (i = 0, l = articles.length; i < l; i = i + 1) {
-            output = output + '<li><a href="#' + articles[i].id + '"><b>' + articles[i].headline + '</b><br />By ' + articles[i].author + ' on ' + articles[i].date + '</a></li>';
+            output = output + '<li><a href="/' + articles[i].id + '"><b>' + articles[i].headline + '</b><br />By ' + articles[i].author + ' on ' + articles[i].date + '</a></li>';
         }
         return '<ul>' + output + '</ul>';
     }
@@ -26,14 +26,14 @@ APP.templates = (function () {
 
         // If the data is not in the right form, redirect to an error
         if (!articleData) {
-            window.location = '#error';
+            window.location = 'error';
             return;
         }
-        return '<a href="#">Go back home</a><h2>' + articleData.headline + '</h2><h3>By ' + articleData.author + ' on ' + articleData.date + '</h3>' + articleData.body;
+        return '<a href="/">Go back home</a><h2>' + articleData.headline + '</h2><h3>By ' + articleData.author + ' on ' + articleData.date + '</h3>' + articleData.body;
     }
 
     function articleLoading() {
-        return '<a href="#">Go back home</a><br /><br />Please wait&hellip;';
+        return '<a href="/">Go back home</a><br /><br />Please wait&hellip;';
     }
 
     return {
