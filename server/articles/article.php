@@ -3,7 +3,7 @@
 class Article {
 
 	public function get($articleId = null) {
-		$rss = new SimpleXMLElement(file_get_contents('http://www.guardian.co.uk/technology/mobilephones/rss'));
+		$rss = new SimpleXMLElement(file_get_contents('http://feeds2.feedburner.com/ft/tech-blog'));
 
 		if ($articleId) {
 		  $xpath = '/rss/channel/item['. $articleId .']';
