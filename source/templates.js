@@ -26,7 +26,7 @@ APP.templates = (function () {
 
         // If the data is not in the right form, redirect to an error
         if (!articleData) {
-            APP.applicationController.route('/error');
+            APP.applicationController.route(APP_ROOT + 'error');
             return;
         }
         return '<a href="' + APP_ROOT + '">Go back home</a><h2>' + articleData.headline + '</h2><h3>By ' + articleData.author + ' on ' + articleData.date + '</h3>' + articleData.body;
