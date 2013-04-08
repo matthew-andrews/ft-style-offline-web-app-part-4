@@ -93,7 +93,6 @@ APP.applicationController = (function () {
 
         // As a bare minimum we need History API to
         // run the advanced features of this app
-        // so detect it here (adapted from Modernizr)
         if (!historyAPI()) return;
 
         window.addEventListener("popstate", function(e) {
@@ -129,7 +128,6 @@ APP.applicationController = (function () {
 
         // As a bare minimum we need History API to
         // run the advanced features of this app
-        // so detect it here (adapted from Modernizr)
         if (!historyAPI()) return;
         $.ajax('api/resources/', {
             dataType: 'json',
@@ -139,6 +137,7 @@ APP.applicationController = (function () {
         });
     }
 
+    // Detection of history API, 'borrowed' from Modernizr
     function historyAPI() {
         var ua = navigator.userAgent;
 
