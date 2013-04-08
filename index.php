@@ -3,7 +3,6 @@
 $appRoot = trim(dirname($_SERVER['SCRIPT_NAME']), '/');
 $appRoot = '/' . ltrim($appRoot . '/', '/');
 $appcacheUpdate = isset($_COOKIE['appcacheUpdate']);
-ini_set('display_errors', 'On');
 ?>
 <!DOCTYPE html>
 <html lang="en">
