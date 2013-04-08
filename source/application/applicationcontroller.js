@@ -36,18 +36,22 @@ APP.applicationController = (function () {
     }
 
     function route(page) {
-        page = page || '';
-        if (page.length > 1) {
-            if (parseInt(page.substring(1), 10) > 0) {
-                showArticle(parseInt(page.substring(1), 10));
+        if (page) {
+            page = page.replace(new RegExp('^' + APP_ROOT), '');
+        } else {
+            page = '';
+        }
+        if (page.length > 0) {
+            if (parseInt(page, 10) > 0) {
+                showArticle(parseInt(page, 10));
             } else {
                 pageNotFound();
-                page = '/error';
+                page = APP_ROOT + 'error';
             }
         } else {
             showHome();
         }
-        window.history.pushState(null, null, page);
+        window.history.pushState(null, null, APP_ROOT + page);
     }
 
     function initialize(resources, contentAlreadyLoaded) {
@@ -127,7 +131,7 @@ APP.applicationController = (function () {
         // run the advanced features of this app
         // so detect it here (adapted from Modernizr)
         if (!historyAPI()) return;
-        $.ajax('/api/resources/', {
+        $.ajax('api/resources/', {
             dataType: 'json',
             success: function (data) {
                 start(data, true, true);

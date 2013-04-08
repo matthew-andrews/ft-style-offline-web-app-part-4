@@ -3,13 +3,19 @@ require_once('server/articles/articlescontroller.php');
 
 class ApplicationController {
 
+	private $_templates;
+
+	public function __construct(Templates $templates) {
+		$this->_templates = $templates;
+	}
+
 	public function showHome() {
-	    $articlesController = new ArticlesController();
-	    return Templates::home($articlesController->showArticleList());
+	    $articlesController = new ArticlesController($this->_templates);
+	    return $this->_templates->home($articlesController->showArticleList());
 	}
 
 	public function showArticle($id) {
-		$articlesController = new ArticlesController();
+		$articlesController = new ArticlesController($this->_templates);
 	    return $articlesController->showArticle($id);
 	}
 

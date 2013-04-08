@@ -3,6 +3,7 @@
 $appRoot = trim(dirname($_SERVER['SCRIPT_NAME']), '/');
 $appRoot = '/' . ltrim($appRoot . '/', '/');
 $appcacheUpdate = isset($_COOKIE['appcacheUpdate']);
+ini_set('display_errors', 'On');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -79,9 +80,10 @@ $appcacheUpdate = isset($_COOKIE['appcacheUpdate']);
 	<div id="loading">Loading&hellip;</div>
 	<?php } else {
 		require_once('server/templates.php');
+		$templates = new Templates($appRoot);
 		require_once('server/application/applicationcontroller.php');
-		$applicationController = new ApplicationController();
-		echo Templates::application($applicationController->route($_SERVER['REQUEST_URI']));
+		$applicationController = new ApplicationController($templates);
+		echo Templates::application($applicationController->route(preg_replace('/^'. preg_quote($appRoot, '/') . '/', '', $_SERVER['REQUEST_URI'])));
 	} ?>
 </body>
 </html>
