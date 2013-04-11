@@ -73,11 +73,12 @@ APP.applicationController = (function () {
 	        APP.appcache.start(iOSPrivateBrowsing);
         }
 
-        // If we don't have resources, stop because this
-        // means the data in the dom has been freshly
+        // If we don't have resources, trigger a
+        // synchronize but from then on stop because
+        // this means the data in the dom has been freshly
         // loaded from the server.
         if (initialRenderOnServer) {
-            return;
+        	return APP.articlesController.synchronizeWithServer();
         }
 
         // Inject CSS Into the DOM
