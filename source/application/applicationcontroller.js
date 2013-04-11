@@ -2,7 +2,8 @@ APP.applicationController = (function () {
     'use strict';
 
     var fastClick,
-        iOSPrivateBrowsing;
+        iOSPrivateBrowsing,
+        initialRenderOnServer;
 
     function offlineWarning() {
         alert("This feature is only available online.");
@@ -55,7 +56,7 @@ APP.applicationController = (function () {
         window.history.pushState(null, null, APP_ROOT + page);
     }
 
-    function initialize(resources, contentAlreadyLoaded) {
+    function initialize(resources) {
 
         // Listen to the URL link clicks
         $(document).on('click', 'a', function (event) {
@@ -75,7 +76,7 @@ APP.applicationController = (function () {
         // If we don't have resources, stop because this
         // means the data in the dom has been freshly
         // loaded from the server.
-        if (contentAlreadyLoaded) {
+        if (initialRenderOnServer) {
             return;
         }
 
@@ -93,6 +94,7 @@ APP.applicationController = (function () {
 
     // This is to our webapp what main() is to C, $(document).ready is to jQuery, etc
     function start(resources, storeResources, contentAlreadyLoaded) {
+    	initialRenderOnServer = contentAlreadyLoaded;
 
         // Try to detect whether iOS private browsing mode is enabled
         try {
@@ -122,19 +124,19 @@ APP.applicationController = (function () {
         // When indexedDB available, use it!
         APP.indexedDB.start(function indexedDBSuccess() {
             APP.database = APP.indexedDB;
-            initialize(resources, contentAlreadyLoaded);
+            initialize(resources);
 
             // When indexedDB is not available, fallback to trying websql
         }, function indexedDBFailure() {
             APP.webSQL.start(function webSQLSuccess() {
                 APP.database = APP.webSQL;
-                initialize(resources, contentAlreadyLoaded);
+                initialize(resources);
 
             // When webSQL not available, fall back to using the network
             }, function webSQLFailure() {
                 APP.network.start(function networkSuccess() {
                     APP.database = APP.network;
-                    initialize(resources, contentAlreadyLoaded);
+                    initialize(resources);
                 });
             });
         });
