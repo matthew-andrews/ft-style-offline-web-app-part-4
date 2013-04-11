@@ -1,7 +1,8 @@
 APP.applicationController = (function () {
     'use strict';
 
-    var fastClick;
+    var fastClick,
+        iOSPrivateBrowsing;
 
     function offlineWarning() {
         alert("This feature is only available online.");
@@ -66,8 +67,10 @@ APP.applicationController = (function () {
         // Set up FastClick
         fastClick = new FastClick(document.body);
 
-        // Initalise appcache
-        APP.appcache.start();
+        // Initalise appcache if app not in private browsing mode
+        if (!iOSPrivateBrowsing) {
+	        APP.appcache.start(iOSPrivateBrowsing);
+        }
 
         // If we don't have resources, stop because this
         // means the data in the dom has been freshly
@@ -90,6 +93,23 @@ APP.applicationController = (function () {
 
     // This is to our webapp what main() is to C, $(document).ready is to jQuery, etc
     function start(resources, storeResources, contentAlreadyLoaded) {
+
+        // Try to detect whether iOS private browsing mode is enabled
+        try {
+            localStorage.test = '';
+            localStorage.removeItem('item');
+        } catch (exception) {
+            if (exception.code === 22) {
+                iOSPrivateBrowsing = true;
+            }
+        }
+
+        if (iOSPrivateBrowsing) {
+            return APP.network.start(function networkSuccess() {
+                APP.database = APP.network;
+                initialize(resources);
+            });
+        }
 
         // As a bare minimum we need History API to
         // run the advanced features of this app
