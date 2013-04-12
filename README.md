@@ -13,6 +13,8 @@ We [left off last time][2] with an app that delivers offline news on most modern
 
 These might not sound like groundbreaking features - websites have been doing this for years - but as usual the *appcache* gets in the way.
 
+// TODO Explain the problem of trying to serve two different **index.php**'s.
+
 In this version we will use a .htaccess file to use 
 [Apache's mod_rewrite][4]. Mod rewrite is very widely documented and has
 been around for decades so I will use it without explanation. If you wish to use a different type of web server you may need to use a different URL rewriting technology.
@@ -29,11 +31,11 @@ As always, the [full code is up on GitHub][5].
 
 <table>
 	<tr>
-		<td>/.htaccess</td>
+		<td><strong>/.htaccess</strong></td>
 		<td></td>
 	</tr>
 	<tr>
-		<td>/api/resources/javascript.php</td>
+		<td><strong>/api/resources/javascript.php</strong></td>
 		<td></td>
 	</tr>
 	<tr>
@@ -41,19 +43,19 @@ As always, the [full code is up on GitHub][5].
 		<td></td>
 	</tr>
 	<tr>
-		<td>/server/application/applicationcontroller.php</td>
+		<td><strong>/server/application/applicationcontroller.php</strong></td>
 		<td></td>
 	</tr>
 	<tr>
-		<td>/server/articles/article.php</td>
+		<td><strong>/server/articles/article.php</strong></td>
 		<td></td>
 	</tr>
 	<tr>
-		<td>/server/articles/articlescontroller.php</td>
+		<td><strong>/server/articles/articlescontroller.php</strong></td>
 		<td></td>
 	</tr>
 	<tr>
-		<td>/server/templates.php</td>
+		<td><strong>/server/templates.php</strong></td>
 		<td></td>
 	</tr>
 	<tr>
@@ -70,6 +72,8 @@ As always, the [full code is up on GitHub][5].
 	</tr>
 </table>
 
+New files are highlighted in bold, changes to existing files not in bold.
+
 ### /.htaccess
 ```
 <IfModule mod_rewrite.c>
@@ -78,7 +82,7 @@ RewriteRule ^([0-9])+ index.php [L]
 </IfModule>
 ```
 
-TODO: Explain what the .htaccess file is doing.
+A simple .htaccess rewrite rule 
 
 ### /api/resources/javascript.php
 
