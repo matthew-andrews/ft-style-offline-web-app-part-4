@@ -78,11 +78,11 @@ New files are highlighted in bold, changes to existing files not in bold.
 ```
 <IfModule mod_rewrite.c>
 RewriteEngine On
-RewriteRule ^([0-9])+ index.php [L]
+RewriteRule ^([0-9]+) index.php [L]
 </IfModule>
 ```
 
-A simple .htaccess rewrite rule 
+A simple .htaccess rewrite rule matching the style used in the client side app code. This should ensure all requests to the main page of the app or article will be pushed through the index.php file.
 
 ### /api/resources/javascript.php
 
