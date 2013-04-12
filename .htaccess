@@ -1,4 +1,4 @@
 <IfModule mod_rewrite.c>
 RewriteEngine On
-RewriteRule ^([0-9])+ index.php [L]
+RewriteRule ^([0-9]+) index.php [L]
 </IfModule>
