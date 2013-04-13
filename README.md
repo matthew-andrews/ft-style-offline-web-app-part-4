@@ -16,8 +16,6 @@ We [left off last time][A2] with an app that delivers offline news on most moder
 
 These might not sound like groundbreaking features - websites have been doing the first three since forever - but as usual the *appcache* gets in the way.
 
-// TODO Explain the problem of trying to serve two different **index.php**'s.
-
 In this version we will use a .htaccess file to use 
 [Apache's mod_rewrite][B2]. Mod rewrite is very widely documented and has
 been around for decades so I will use it without explanation. If you wish to use a different type of web server you may need to use a different URL rewriting technology.
@@ -27,6 +25,38 @@ As always, the [full code is up on GitHub][B3].
 [B1]:http://diveintohtml5.info/history.html
 [B2]:http://labs.ft.com/2012/11/using-an-iframe-to-stop-app-cache-storing-masters/
 [B3]:https://github.com/matthew-andrews/ft-style-offline-web-app-part-4
+
+## More app cache hacking
+
+
+The main problem we have to solve is in order to achieve the fastest start up irrespective of connection type (whether the device connected to broadband, a flaky mobile data connection, a coffee shop captive portal or completely offline) you have to ensure that the page in which your app starts on is **explicitly cached** in the application cache manifest.
+
+At FT Labs we refer to this kind of application cache behaviour as *prefer offline*, where the application cache - if populated - will *always* be the preferred source for the app to load itself from, rather than the network.
+
+We can achieve this either by listing the root of the app explicitly in the ```CACHE``` section of the app cache manifest. Or, as we do in our demo app, listing it as the 2nd part of a fallback within the ```FALLBACK``` section.
+
+((In an ideal world we would like for the application cache to be configured so that it is *always* prefer offline but that is not currently possible with the current spec or any browser implementation :-(. Given the home page is the likeliest entry point to your application, we prioritise that.))
+
+This means the web server must serve the root of your application (in the FT's case that's ```http://app.ft.com/```) with the bootstrap code - explained in the first tutorial.
+
+However, in order to achieve the server side render for the first time the user visits the app (which makes for a much faster initial app start) that same application root URL sometimes also needs, in the case of our demo app, to return the current latest blog posts.
+
+To summarise:
+
+- When the app cache is doing its thing http://yourapp.com/ must be the bootstrap.
+- Otherwise http://yourapp.com/ should be the rendered HTML content.
+
+Given we have no Javascript control over either these requests (the former is made by the application cache's update mechanism, the latter by the user typing the URL into their browser / clicking a link from another site) we only have one solution.
+
+### The solution
+
+We already have quite precise control over how and when the application cache is loaded through the ```iframe``` solution implemented in the last tutorial so solving this problem is actually quite easy.
+
+Before adding the iframe, simply set a short-life cookie (I've chosen 5 minutes, but that is totally arbitrary - 1 minute would probably be sufficient) and when we receive a notification from the Javascript within that iframe (which is listening to the application cache events) that the application cache has finished updating we simply unset the cookie.
+
+Then on the server side, within **/index.php**, if that cookie is set return the bootstrap otherwise return the latest blog posts.
+
+This is, of course, a monumental hack. But with the app cache as it is today it's the best we can do.
 
 ### The new and changed files required in the tutorial:-
 
@@ -203,7 +233,7 @@ $appcacheUpdate = isset($_COOKIE['appcacheUpdate']);
 // TODO Explain the changes to index.php
 
 
-## Reimplement the demo app in PHP
+## Re-implement the demo app in PHP
 
 The next step is to take the code we've written and make it so that it will run on our server. The easiest way to do this (where easiest means - not adding dependencies on any more technologies) is to rewrite it in PHP.
 
@@ -251,7 +281,6 @@ class ApplicationController {
 <?php
 
 class Article {
-
 	public function get($articleId = null) {
 		$rss = new SimpleXMLElement(file_get_contents('http://feeds2.feedburner.com/ft/tech-blog'));
 
