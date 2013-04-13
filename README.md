@@ -14,7 +14,7 @@ We [left off last time][A2] with an app that delivers offline news on most moder
 - The first time a user uses the app the first load should be rendered on the server side.
 - We should use the [History API][B1] instead of hash tag URLs so that the URL in the user's browser address page always matches page that they are viewing.
 
-These might not sound like groundbreaking features - websites have been doing the first three since forever - but as usual the *appcache* gets in the way.
+These might not sound like groundbreaking features - websites have been doing the first three since forever - but as usual the *HTML5 application cache* gets in the way.
 
 In this version we will use a .htaccess file to use 
 [Apache's mod_rewrite][B2]. Mod rewrite is very widely documented and has
@@ -29,13 +29,13 @@ As always, the [full code is up on GitHub][B3].
 ## More app cache hacking
 
 
-The main problem we have to solve is in order to achieve the most consistent start up irrespective of connection type (whether the device connected to broadband, a flaky mobile data connection, a coffee shop captive portal or completely offline) you have to ensure that the page in which your app starts on is **explicitly cached** in the application cache manifest.
+The main problem we have to solve is to try to achieve the most consistent start up time irrespective of connection type (whether the device connected to broadband, a flaky mobile data connection, a coffee shop captive portal or completely offline). In order to achieve this you have to ensure that the page that your app starts on is **explicitly cached** in the application cache manifest.
 
 At FT Labs we refer to this kind of application cache behaviour as *prefer offline*, where the application cache - if populated - will *always* be the preferred source for the app to load itself from, rather than the network.
 
 We can achieve this either by listing the root of the app explicitly in the ```CACHE``` section of the app cache manifest. Or, as we do in our demo app, listing it as the 2nd part of a fallback within the ```FALLBACK``` section.
 
-((In an ideal world we would like for the application cache to be configured so that it is *always* prefer offline but that is not currently possible with the current spec or any browser implementation :-(. Given the home page is the likeliest entry point to your application, we prioritise that.))
+(In an ideal world we would like for the application cache to be configured so that every request (even ones not listed in the application cache) are *always* prefer offline unless we say otherwise but that is not currently possible with the current spec or any browser implementation :-(. Given the home page is the likeliest entry point to your application, we prioritise that.)
 
 This means the web server must serve the root of your application (in the FT's case that's ```http://app.ft.com/```) with the bootstrap code - explained in the first tutorial.
 
@@ -104,38 +104,6 @@ RewriteRule ^([0-9]+) index.php [L]
 ```
 
 A simple .htaccess rewrite rule matching the style used in the client side app code. This should ensure all requests to the main page of the app or article will be pushed through the index.php file.
-
-### /api/resources/javascript.php
-
-```
-<?php
-$js = '';
-$js .= file_get_contents('../../libraries/client/fastclick.js');
-$js = $js . 'var APP={}; (function (APP) {';
-$js = $js . file_get_contents('../../source/application/applicationcontroller.js');
-$js = $js . file_get_contents('../../source/articles/articlescontroller.js');
-$js = $js . file_get_contents('../../source/articles/article.js');
-$js = $js . file_get_contents('../../source/datastores/network.js');
-$js = $js . file_get_contents('../../source/datastores/indexeddb.js');
-$js = $js . file_get_contents('../../source/datastores/websql.js');
-$js = $js . file_get_contents('../../source/templates.js');
-$js = $js . file_get_contents('../../source/appcache.js');
-$js = $js . '}(APP)),';
-
-// Detect and set the absolute path to the root of the web app
-// First get a clean version of the current directory (will include api/resources)
-$appRoot = trim(dirname($_SERVER['SCRIPT_NAME']), '/');
-
-// Strip of api/resources from the end of the path
-$appRoot = trim(preg_replace('/api\/resources$/i', '', $appRoot), '/');
-
-// Ensure the path starts and ends with a slash or just / if on the root of domain
-$appRoot = '/' . ltrim($appRoot . '/', '/');
-
-echo $js . 'APP_ROOT = "' . $appRoot . '";';
-```
-
-// TODO Explain the javascript
 
 ### /index.php
 
@@ -231,6 +199,38 @@ $appcacheUpdate = isset($_COOKIE['appcacheUpdate']);
 ```
 
 // TODO Explain the changes to index.php
+
+### /api/resources/javascript.php
+
+```
+<?php
+$js = '';
+$js .= file_get_contents('../../libraries/client/fastclick.js');
+$js = $js . 'var APP={}; (function (APP) {';
+$js = $js . file_get_contents('../../source/application/applicationcontroller.js');
+$js = $js . file_get_contents('../../source/articles/articlescontroller.js');
+$js = $js . file_get_contents('../../source/articles/article.js');
+$js = $js . file_get_contents('../../source/datastores/network.js');
+$js = $js . file_get_contents('../../source/datastores/indexeddb.js');
+$js = $js . file_get_contents('../../source/datastores/websql.js');
+$js = $js . file_get_contents('../../source/templates.js');
+$js = $js . file_get_contents('../../source/appcache.js');
+$js = $js . '}(APP)),';
+
+// Detect and set the absolute path to the root of the web app
+// First get a clean version of the current directory (will include api/resources)
+$appRoot = trim(dirname($_SERVER['SCRIPT_NAME']), '/');
+
+// Strip of api/resources from the end of the path
+$appRoot = trim(preg_replace('/api\/resources$/i', '', $appRoot), '/');
+
+// Ensure the path starts and ends with a slash or just / if on the root of domain
+$appRoot = '/' . ltrim($appRoot . '/', '/');
+
+echo $js . 'APP_ROOT = "' . $appRoot . '";';
+```
+
+// TODO Explain the javascript
 
 
 ## Re-implement the demo app in PHP
