@@ -450,7 +450,6 @@ We need to make the following changes to the applicationcontroller.js file:
 
 - Add a new new class variable ```initialRenderOnServer```:-
 ```var fastClick, iOSPrivateBrowsing, initialRenderOnServer;```
-
 - Replace the ```route``` function with one that is able to understand real URLs instead of hash tag URLs.
 
 ```
