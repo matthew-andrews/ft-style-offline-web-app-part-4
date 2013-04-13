@@ -30,7 +30,7 @@ As always, the [full code is up on GitHub][B3].
 
 The main problem we have to solve is to try to achieve the a consistent start up time irrespective of connection type the user's device is on (whether the device connected to broadband, a flaky mobile data connection, a coffee shop captive portal or completely offline). In order to achieve this you have to ensure that the page that your app starts on is **explicitly cached** in the application cache manifest.
 
-At FT Labs we refer to this kind of application cache behaviour as *prefer offline*, where the application cache - if populated - will *always* be the preferred source for the app to load itself from, rather than the network.
+At FT Labs we refer to this kind of application cache behaviour as *prefer offline*, where the application cache - if populated - will *always* be the preferred source for the app to load itself from, rather than the network. This means that the time the app will start up will always be the same - no matter what kind of connection the user's device has to the internet.
 
 We can achieve this either by listing the root of the app explicitly in the ```CACHE``` section of the app cache manifest. Or, as we do in our demo app, listing it as the 2nd part of a fallback within the ```FALLBACK``` section.
 
