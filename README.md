@@ -52,7 +52,7 @@ Given we have no Javascript control over either these requests (the former is ma
 
 We already have quite precise control over how and when the application cache is loaded through the iframe solution implemented in the previous tutorial so solving this problem is actually quite easy.
 
-Before adding the iframe, simply set a cookie and when we receive a notification from the Javascript within that iframe (which is listening to the application cache events) that the application cache has finished updating we simply unset the cookie.
+Before adding the iframe, simply set a cookie and when we receive a notification from the Javascript within that iframe (which is listening to the application cache events) that the application cache has finished updating we unset the cookie.
 
 Then on the server side, within **/index.php**, if that cookie is set return the bootstrap otherwise return the latest blog posts.
 
@@ -640,15 +640,15 @@ The majority of the changes here are changing the URLs inside the each of the ``
 
 ## Wrapping up
 
-In this tutorial we've made our demo app (that's actually a website) work just as well as a website as it does as an app. But in doing so we've created a bit of a monster.
+In this tutorial we've made our demo web app work just as well as a website as it does as an app. But in doing so we've created a bit of a monster.
 
 If we look back again at the PHP server side code and compare it to the client side Javascript there is a huge amount of duplicated logic. With the exception of the client side specific code (such as the local database and app cache logic) the contents of the **/sources** folder, used for client side Javascript is almost exactly the same at the **/server** folder, used for PHP.
 
 Having to maintain two sets of files with identical logic wastes time - as every feature or bug fix has to be implemented twice.
 
-The codebase would be a lot neater and more manageable if we were able to use *just* write Javascript and then run that Javascript code on **both the server and client**.
+The codebase would be a lot neater and more manageable if we were able to use *just* write the Javascript versions and then run that Javascript code on **both the server and client**.
 
-In 2009 Ryan Dahl created [NodeJS][Z1], which allows developers to do just that. In the next tutorial we will bid farewell to the web technologies of the past (PHP, .htaccess, jQuery) and rebuild the app with the latest tools and latest techniques.
+In 2009 Ryan Dahl created [NodeJS][Z1], which allows developers to do just that. In the next tutorial we will bid farewell to the web technologies of the past (PHP, .htaccess, jQuery) and rebuild the app with the latest tools and techniques.
 
 Finally, if you think you’d like to work on this sort of thing and live (or would like to live) in London, [we’re hiring][Z2]!
 
