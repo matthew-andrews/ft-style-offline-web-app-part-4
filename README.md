@@ -198,7 +198,19 @@ $appcacheUpdate = isset($_COOKIE['appcacheUpdate']);
 </html>
 ```
 
-// TODO Explain the changes to index.php
+As I explain above in the **More app cache hacking** section this file needs to be able to return the latest blog items for ordinary requests and when this page is requested during an application cache update it should return the bootstrap we created in [Tutorial 1][G1].
+
+The code we return if we're not doing an app cache update can be a normal web page that follows all the best practises, such as:
+
+- including the Javascript through a normal script tag that points to an external resource (we'll create this file in just a minute):-
+
+``<script type="text/javascript" src="<?php $appRoot; ?>api/resources/javascript.php"></script>```
+
+- and including the CSS again by pulling it in in the normal way from an external URL:-
+
+```<link href="<?php echo $appRoot; ?>css/global.css" media="all" rel="stylesheet" type="text/css" />```
+
+[G1]:http://labs.ft.com/2012/08/basic-offline-html5-web-app/
 
 ### /api/resources/javascript.php
 
