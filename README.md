@@ -404,13 +404,41 @@ $output .= '<li><a href="' . $this->_appRoot . $articles[$i]['id'] . '"><b>' . $
 
 ### /source/appcache.js
 
-// TODO Explain the cookie hack solution.
+As we discussed above with the **More hacking the app cache** section, we have two changes to make inside **/source/appcache.js**.
 
-// We want root URL of the application to be explicitly application cached so that the URL that users always comes from the application cache. (This means that is guaranteed to load reliably fast - otherwise on poor quality mobile data connections or captive portal wifi connections, for example, the app would load very slowly - or may never load).
+The first change is to set the cookie inside the ```innerLoad``` function:-
 
-// Make sure mention that we don't want to risk storing *content* in the application cache. Firstly it's a waste because we already store this inside local database.
+```
+function innerLoad() {
 
-// iOS6 home screen workaround for prefer offline on the home screen'd page.
+	// 5 minutes in the future
+	var cookieExpires = new Date(new Date().getTime() + 60 * 5 * 1000);
+	document.cookie = "appcacheUpdate=1;expires=" + cookieExpires.toGMTString();
+	var iframe = document.createElement('IFRAME');
+	iframe.setAttribute('style', 'width:0px; height:0px; visibility:hidden; position:absolute; border:none');
+	iframe.src = APP_ROOT + 'manifest.html';
+	iframe.id = 'appcacheloader';
+	document.body.appendChild(iframe);
+}
+```
+
+And the second change is to unset that same cookie once we know the appcache update process is complete:-
+
+```
+function logEvent(evtcode, hasChecked) {
+	var s = statuses[evtcode], loaderEl, cookieExpires;
+	if (hasChecked || s === 'timeout') {
+		if (s === 'uncached' || s === 'idle' || s === 'obsolete' || s === 'timeout' || s === 'updateready') {
+			loaderEl = document.getElementById('appcacheloader');
+			loaderEl.parentNode.removeChild(loaderEl);
+
+			// Remove appcacheUpdate cookie
+			cookieExpires = new Date(new Date().getTime() - 60 * 5 * 1000);
+			document.cookie = "appcacheUpdate=;expires=" + cookieExpires.toGMTString();
+		}
+	}
+}
+```
 
 ### /source/application/applicationcontroller.js
 
