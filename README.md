@@ -321,7 +321,6 @@ This code should look very similar to its corresponding Javascript file in **/so
 ```
 <?php
 class Templates {
-
     private $_appRoot;
 
     public function __construct($appRoot) {
@@ -567,7 +566,6 @@ APP.templates = (function () {
 
     function home() {
         return '<button id="refreshButton">Refresh the news!</button><div id="headlines"></div></div>';
-
     }
 
     function articleList(articles) {
