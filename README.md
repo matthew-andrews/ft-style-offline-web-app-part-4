@@ -14,7 +14,7 @@ We [left off last time][A2] with an app that delivers offline news on most moder
 - The first time a user uses the app the first load should be rendered on the server side.
 - We should use the [History API][B1] instead of hash tag URLs so that the URL in the user's browser address page always matches page that they are viewing.
 
-These might not sound like groundbreaking features - websites have been doing the first three forever - but as usual the *appcache* gets in the way.
+These might not sound like groundbreaking features - websites have been doing the first three since forever - but as usual the *appcache* gets in the way.
 
 // TODO Explain the problem of trying to serve two different **index.php**'s.
 
@@ -33,43 +33,33 @@ As always, the [full code is up on GitHub][B3].
 <table>
 	<tr>
 		<td><strong>/.htaccess</strong></td>
-		<td></td>
 	</tr>
 	<tr>
 		<td><strong>/api/resources/javascript.php</strong></td>
-		<td></td>
 	</tr>
 	<tr>
 		<td>/index.php</td>
-		<td></td>
 	</tr>
 	<tr>
 		<td><strong>/server/application/applicationcontroller.php</strong></td>
-		<td></td>
 	</tr>
 	<tr>
 		<td><strong>/server/articles/article.php</strong></td>
-		<td></td>
 	</tr>
 	<tr>
 		<td><strong>/server/articles/articlescontroller.php</strong></td>
-		<td></td>
 	</tr>
 	<tr>
 		<td><strong>/server/templates.php</strong></td>
-		<td></td>
 	</tr>
 	<tr>
 		<td>/source/appcache.js</td>
-		<td></td>
 	</tr>
 	<tr>
 		<td>/source/application/applicationcontroller.js</td>
-		<td></td>
 	</tr>
 	<tr>
 		<td>/source/templates.js</td>
-		<td>We need to update the templates to be real URLs rather than hash tag URLs.</td>
 	</tr>
 </table>
 
@@ -627,7 +617,7 @@ In this tutorial we've made our demo app (that's actually a website) work just a
 
 If we look back again at the PHP server side code and compare it to the client side Javascript there is a huge amount of duplicated logic. With the exception of the client side specific code (such as the local database and app cache logic) the contents of the **/sources** folder, used for client side Javascript is almost exactly the same at the **/server** folder, used for PHP.
 
-Having to maintain two sets of files with identical logic wastes a time - as every feature or bug fix has to be implemented twice.
+Having to maintain two sets of files with identical logic wastes time - as every feature or bug fix has to be implemented twice.
 
 The codebase would be a lot neater and more manageable if we were able to use *just* write Javascript and then run that Javascript code on **both the server and client**.
 
