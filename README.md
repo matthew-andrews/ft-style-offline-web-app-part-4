@@ -29,7 +29,7 @@ As always, the [full code is up on GitHub][B3].
 ## More app cache hacking
 
 
-The main problem we have to solve is to try to achieve the most consistent start up time irrespective of connection type (whether the device connected to broadband, a flaky mobile data connection, a coffee shop captive portal or completely offline). In order to achieve this you have to ensure that the page that your app starts on is **explicitly cached** in the application cache manifest.
+The main problem we have to solve is to try to achieve the a consistent start up time irrespective of connection type the user's device is on (whether the device connected to broadband, a flaky mobile data connection, a coffee shop captive portal or completely offline). In order to achieve this you have to ensure that the page that your app starts on is **explicitly cached** in the application cache manifest.
 
 At FT Labs we refer to this kind of application cache behaviour as *prefer offline*, where the application cache - if populated - will *always* be the preferred source for the app to load itself from, rather than the network.
 
@@ -208,7 +208,7 @@ The code we return if we're not doing an app cache update can be a normal web pa
 
 - including the Javascript through a normal script tag that points to an external resource (we'll create this file in just a minute):-
 
-``<script type="text/javascript" src="<?php $appRoot; ?>api/resources/javascript.php"></script>```
+```<script type="text/javascript" src="<?php $appRoot; ?>api/resources/javascript.php"></script>```
 
 - and including the CSS again by pulling it in in the normal way from an external URL:-
 
@@ -701,7 +701,7 @@ Having to maintain two sets of files with identical logic wastes time as every f
 
 The codebase would be a lot neater and more manageable if we were able to *just* write the Javascript versions and then run that Javascript code on **both the server and client**.
 
-In 2009 Ryan Dahl created [NodeJS][Z1], which allows developers to do just that. In the next tutorial we will bid farewell to the web technologies of the past (PHP, .htaccess, jQuery) and rebuild the app with the latest tools and techniques (Node, NPM, Grunt, BusterJS and more...).
+In 2009 Ryan Dahl created [NodeJS][Z1], which allows developers to do just that. In the next tutorial we will bid farewell to the web technologies of the past (PHP and .htaccess) and rebuild the app with the latest tools and techniques (Node, NPM, Grunt, BusterJS and more…).
 
 Finally, if you think you’d like to work on this sort of thing and live (or would like to live) in London, [we’re hiring][Z2]!
 
