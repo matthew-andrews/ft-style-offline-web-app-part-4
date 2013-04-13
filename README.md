@@ -198,7 +198,11 @@ $appcacheUpdate = isset($_COOKIE['appcacheUpdate']);
 </html>
 ```
 
-As I explain above in the **More app cache hacking** section this file needs to be able to return the latest blog items for ordinary requests and when this page is requested during an application cache update it should return the bootstrap we created in [Tutorial 1][G1].
+As I explain above in the **More app cache hacking** section this file needs to be able to return the latest blog items for ordinary requests and it should return the bootstrap we created in [Tutorial 1][G1] when requested during an application cache update.
+
+We detect whether the cookie is set at the top of the file via the PHP ```isset``` function:-
+
+```$appcacheUpdate = isset($_COOKIE['appcacheUpdate']);```
 
 The code we return if we're not doing an app cache update can be a normal web page that follows all the best practises, such as:
 
