@@ -654,11 +654,11 @@ In this tutorial we've made our demo web app work just as well as a website as i
 
 If we look back again at the PHP server side code and compare it to the client side Javascript there is a huge amount of duplicated logic. With the exception of the client side specific code (such as the local database and app cache logic) the contents of the **/sources** folder, used for client side Javascript is almost exactly the same at the **/server** folder, used for PHP.
 
-Having to maintain two sets of files with identical logic wastes time - as every feature or bug fix has to be implemented twice.
+Having to maintain two sets of files with identical logic wastes time as every feature or bug fix has to be implemented twice.
 
 The codebase would be a lot neater and more manageable if we were able to *just* write the Javascript versions and then run that Javascript code on **both the server and client**.
 
-In 2009 Ryan Dahl created [NodeJS][Z1], which allows developers to do just that. In the next tutorial we will bid farewell to the web technologies of the past (PHP, .htaccess, jQuery) and rebuild the app with the latest tools and techniques.
+In 2009 Ryan Dahl created [NodeJS][Z1], which allows developers to do just that. In the next tutorial we will bid farewell to the web technologies of the past (PHP, .htaccess, jQuery) and rebuild the app with the latest tools and techniques (Node, NPM, Grunt, BusterJS and more...).
 
 Finally, if you think you’d like to work on this sort of thing and live (or would like to live) in London, [we’re hiring][Z2]!
 
