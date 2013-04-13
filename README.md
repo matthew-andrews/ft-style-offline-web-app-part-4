@@ -29,7 +29,7 @@ As always, the [full code is up on GitHub][B3].
 ## More app cache hacking
 
 
-The main problem we have to solve is in order to achieve the fastest start up irrespective of connection type (whether the device connected to broadband, a flaky mobile data connection, a coffee shop captive portal or completely offline) you have to ensure that the page in which your app starts on is **explicitly cached** in the application cache manifest.
+The main problem we have to solve is in order to achieve the most consistent start up irrespective of connection type (whether the device connected to broadband, a flaky mobile data connection, a coffee shop captive portal or completely offline) you have to ensure that the page in which your app starts on is **explicitly cached** in the application cache manifest.
 
 At FT Labs we refer to this kind of application cache behaviour as *prefer offline*, where the application cache - if populated - will *always* be the preferred source for the app to load itself from, rather than the network.
 
