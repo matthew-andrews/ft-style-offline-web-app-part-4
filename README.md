@@ -414,14 +414,16 @@ $output .= '<li><a href="' . $this->_appRoot . $articles[$i]['id'] . '"><b>' . $
 
 ### /source/application/applicationcontroller.js
 
-The changes to the application controller are a little more complicated.
+The changes to the application controller are a little more complicated. We want to make some changes to existing code, and add a few new methods. I'm just going to post the changes in this tutorial - for the full code please [view the file on the GitHub project][Q1].
 
-// TODO Explain the changes:-
+[Q1]:https://github.com/matthew-andrews/ft-style-offline-web-app-part-4/blob/tutorial/source/application/applicationcontroller.js
 
-- A new class variable:-
+We need to make the following changes to the applicationcontroller.js file:
+
+- Add a new new class variable ```initialRenderOnServer```:-
 ```var fastClick, iOSPrivateBrowsing, initialRenderOnServer;```
 
-- A new routing function that is able to understand real URLs rather than hash tag URLs.
+- Replace the ```route``` function with one that is able to understand real URLs instead of hash tag URLs.
 
 ```
 function route(page) {
@@ -444,9 +446,9 @@ function route(page) {
 }
 ````
 
-Notice that we're also adding our code to hook into the History API here.
+Notice that we're also adding our code to hook into the **HTML5 History API** here.
 
-- New ```initialise``` and ```start``` methods.
+- Replace the ```initialise``` and ```start``` methods with ones that are able to either boot the app from our locally cached bootstrap (discussed in Tutorial 1) or if the whole page is loaded from the network.
 
 ```
 function initialize(resources) {
@@ -541,7 +543,7 @@ function start(resources, storeResources, contentAlreadyLoaded) {
 }
 ```
 
-- A new function that handles the app if it is starting up after being downloaded directly from the server (as opposed to from the app cache).
+- We need to add a new function that handles the app if it is starting up after being downloaded directly from the server (as opposed to from the app cache).
 
 ```
 function startFromServer() {
@@ -580,7 +582,7 @@ function historyAPI() {
 }
 ```
 
-- And finally, updated our public API to explore the ```route``` and the newly added ```startFromServer``` methods.
+- And finally, we need to update our public API to explose the ```route``` and newly added ```startFromServer``` methods.
 
 ```
 return {
@@ -644,8 +646,7 @@ APP.templates = (function () {
 
 The majority of the changes here are changing the URLs inside the each of the ```<a href="">```'s from using a hashtag URL to using a real URL (e.g. yourapp.com/#5 becomes yourapp/5).
 
-// TODO - Update this file so that error handling isn't here.
-// Captured an issue to handle error routing better - #6 (I think).
+There's also a small change to the way the error handler works - previously it just redirected the user to the error page by calling ```window.location = '#error';``` but now since we aren't using hashtag URLs we have to call the route function instead.
 
 ## Wrapping up
 
