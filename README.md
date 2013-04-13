@@ -52,7 +52,7 @@ Given we have no Javascript control over either these requests (the former is ma
 
 We already have quite precise control over how and when the application cache is loaded through the ```iframe``` solution implemented in the last tutorial so solving this problem is actually quite easy.
 
-Before adding the iframe, simply set a short-life cookie (I've chosen 5 minutes, but that is totally arbitrary - 1 minute would probably be sufficient) and when we receive a notification from the Javascript within that iframe (which is listening to the application cache events) that the application cache has finished updating we simply unset the cookie.
+Before adding the iframe, simply set a cookie and when we receive a notification from the Javascript within that iframe (which is listening to the application cache events) that the application cache has finished updating we simply unset the cookie.
 
 Then on the server side, within **/index.php**, if that cookie is set return the bootstrap otherwise return the latest blog posts.
 
