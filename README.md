@@ -16,15 +16,14 @@ We [left off last time][A2] with an app that delivers offline news on most moder
 
 These might not sound like groundbreaking features - websites have been doing the first three since forever - but as usual the *HTML5 application cache* gets in the way.
 
-In this version we will use a .htaccess file to use 
-[Apache's mod_rewrite][B2]. Mod rewrite is very widely documented and has
-been around for decades so I will use it without explanation. If you wish to use a different type of web server you may need to use a different URL rewriting technology.
+In this tutorial we will use [Apache's mod_rewrite][B2] via an .htaccess file. Mod rewrite is [already very widely documented][B4] so I will use it without much explanation. If you wish to use a different type of web server you may need to use a different URL rewriting technology.
 
 As always, the [full code is up on GitHub][B3].
 
 [B1]:http://diveintohtml5.info/history.html
 [B2]:http://labs.ft.com/2012/11/using-an-iframe-to-stop-app-cache-storing-masters/
 [B3]:https://github.com/matthew-andrews/ft-style-offline-web-app-part-4
+[B4]:http://httpd.apache.org/docs/current/mod/mod_rewrite.html
 
 ## More app cache hacking
 
@@ -246,12 +245,11 @@ $appRoot = '/' . ltrim($appRoot . '/', '/');
 echo $js . 'APP_ROOT = "' . $appRoot . '";';
 ```
 
-// TODO Explain the javascript
-
+This is almost the same logic as **/api/resources/index.php**, except that it only returns Javascript. (**/api/resources/index.php** returns JSON encoded object with two keys - one, ```js``` containing the demo web app's Javascript and another, ```css``` containing its css).
 
 ## Re-implement the demo app in PHP
 
-The next step is to take the code we've written and make it so that it will run on our server. The easiest way to do this (where easiest means - not adding dependencies on any more technologies) is to rewrite it in PHP.
+The next step is to take the code we've written in Javascript and make it so that it will run on our server. The easiest way to do this (where easiest for the purposes of this tutorial means not adding dependencies on any more technologies) is to rewrite it in PHP.
 
 ### /server/application/applicationcontroller.php
 
@@ -289,7 +287,7 @@ class ApplicationController {
 }
 ```
 
-// TODO Explain the application controller
+To keep things as simple as possible I've copied the same structure as the Javascript file - giving the files, classes and their methods all the same names wherever possible.
 
 ### /server/articles/article.php
 
