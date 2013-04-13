@@ -50,7 +50,7 @@ Given we have no Javascript control over either these requests (the former is ma
 
 ### The solution
 
-We already have quite precise control over how and when the application cache is loaded through the ```iframe``` solution implemented in the last tutorial so solving this problem is actually quite easy.
+We already have quite precise control over how and when the application cache is loaded through the iframe solution implemented in the previous tutorial so solving this problem is actually quite easy.
 
 Before adding the iframe, simply set a cookie and when we receive a notification from the Javascript within that iframe (which is listening to the application cache events) that the application cache has finished updating we simply unset the cookie.
 
