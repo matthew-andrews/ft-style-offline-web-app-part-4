@@ -25,10 +25,17 @@ As always, the [full code is up on GitHub][B3].
 [B3]:https://github.com/matthew-andrews/ft-style-offline-web-app-part-4
 [B4]:http://httpd.apache.org/docs/current/mod/mod_rewrite.html
 
+## On and off - not always a switch
+
+Product managers often come up with feature requests with descriptions along the lines of: *when the app is online do this, when it's offline do that*. Unfortunately, it's rarely that black and white.
+
+Connections can be weak and very slow, they can be flaky - disconnecting frequently. Devices can even be tricked into thinking it's online when they're not - they could be behind a captive portal in a coffee shop or hotel; or the device could have a perfect connection to a wifi router that isn't connected to anything else. Requests to your website may be being blocked or somehow mangled by a government or corporate proxy. Or, of course, the device could actually be completely offline.
+
+Rather than thinking in terms of offline and online, the way to deliver the best possible user experience is to aim to deliver a app startup time that is consistent and unaffected by the connection type or speed. In order to achieve this we're going to need some more app cache hacking. 
+
 ## More app cache hacking
 
-
-The main problem we have to solve is to try to achieve the a consistent start up time irrespective of connection type the user's device is on (whether the device connected to broadband, a flaky mobile data connection, a coffee shop captive portal or completely offline). In order to achieve this you have to ensure that the page that your app starts on is **explicitly cached** in the application cache manifest.
+The only way you can have a consistent start up time in the face of a wild west of internet connection possibilities, it to ensure your web app will **always** (or whenever possible) load from the device's local application cache. To do this you have to ensure that the page that your app starts on is **explicitly cached** in the application cache manifest.
 
 At FT Labs we refer to this kind of application cache behaviour as *prefer offline*, where the application cache - if populated - will *always* be the preferred source for the app to load itself from, rather than the network. This means that the amount of time the demo app will take to start up will always be the same - no matter what kind of connection the user's device has to the internet.
 
