@@ -39,7 +39,7 @@ We can achieve this either by listing the root of the app explicitly in the ```C
 
 This means the web server must serve the root of your application (in the FT's case that's ```http://app.ft.com/```) with the bootstrap code - explained in the first tutorial.
 
-However, in order to achieve the server side render for the first time the user visits the app (which makes for a much faster initial app start) that same application root URL sometimes also needs, in the case of our demo app, to return the current latest blog posts.
+However, in order to achieve the server side render of the HTML for the first time the user visits the app (which makes for a much faster initial app start) that same application root URL sometimes also needs, in the case of our demo app, to return the current latest blog posts.
 
 To summarise:
 
