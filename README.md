@@ -646,7 +646,7 @@ If we look back again at the PHP server side code and compare it to the client s
 
 Having to maintain two sets of files with identical logic wastes time - as every feature or bug fix has to be implemented twice.
 
-The codebase would be a lot neater and more manageable if we were able to use *just* write the Javascript versions and then run that Javascript code on **both the server and client**.
+The codebase would be a lot neater and more manageable if we were able to *just* write the Javascript versions and then run that Javascript code on **both the server and client**.
 
 In 2009 Ryan Dahl created [NodeJS][Z1], which allows developers to do just that. In the next tutorial we will bid farewell to the web technologies of the past (PHP, .htaccess, jQuery) and rebuild the app with the latest tools and techniques.
 
