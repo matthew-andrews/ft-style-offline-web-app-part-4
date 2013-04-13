@@ -580,7 +580,16 @@ function historyAPI() {
 }
 ```
 
-- And finally, updated our public API 
+- And finally, updated our public API to explore the ```route``` and the newly added ```startFromServer``` methods.
+
+```
+return {
+    start: start,
+    startFromServer: startFromServer,
+    route: route
+};
+``` 
+
 
 
 ### /source/templates.js
