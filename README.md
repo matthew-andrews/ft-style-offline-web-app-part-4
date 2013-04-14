@@ -252,7 +252,7 @@ $appRoot = '/' . ltrim($appRoot . '/', '/');
 echo $js . 'APP_ROOT = "' . $appRoot . '";';
 ```
 
-This is almost the same logic as **/api/resources/index.php**, except that it only returns Javascript. (**/api/resources/index.php** returns JSON encoded object with two keys - one, ```js``` containing the demo web app's Javascript and another, ```css``` containing its css).
+This is almost the same logic as **/api/resources/index.php**, except that it only returns Javascript. ( **/api/resources/index.php** returns JSON encoded object with two keys - one, ```js``` containing the demo web app's Javascript and another, ```css``` containing its css).
 
 ## Re-implement the demo app in PHP
 
