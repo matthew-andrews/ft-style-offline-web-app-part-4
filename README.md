@@ -64,6 +64,14 @@ Then on the server side, within **/index.php**, if that cookie is set return the
 
 This is, of course, a monumental hack. But with the app cache as it is today it's the best we can do.
 
+### Getting Started
+
+Start by cloning ([or downloading][E1]) the GitHub repository from Part 3.
+
+```git clone git://github.com/matthew-andrews/ft-style-offline-web-app-part-3.git```
+
+[E1]:https://github.com/matthew-andrews/ft-style-offline-web-app-part-3
+
 ### The new and changed files required in the tutorial:-
 
 <table>
