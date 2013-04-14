@@ -35,7 +35,7 @@ Rather than thinking in terms of offline and online, the way to deliver the best
 
 ## More app cache hacking
 
-The only way you can have a consistent start up time in the face of a wild west of internet connection possibilities is to ensure your web app will **always** (or whenever possible) load from the device's local application cache. To do this you have to ensure that the page that your app starts on is **explicitly cached** in the application cache manifest.
+The only way you can have a consistent start up time in the face of a wild west of internet connection possibilities is to ensure your web app will prefer, **whenever possible**, load from the device's local application cache. To do this you have to ensure that the page that your app starts on is **explicitly cached** in the application cache manifest.
 
 At FT Labs we refer to this kind of application cache behaviour as *prefer offline*, where the application cache - if populated - will *always* be the preferred source for the app to load itself from, rather than the network. This means that the amount of time the demo app will take to start up will always be the same - no matter what kind of connection the user's device has to the internet.
 
