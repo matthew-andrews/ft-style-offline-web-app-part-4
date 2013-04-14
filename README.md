@@ -31,7 +31,7 @@ Product managers often come up with feature requests with descriptions along the
 
 Connections can be weak and very slow, they can be flaky - disconnecting frequently. Devices can even be tricked into thinking they're online when they're not - they could be behind a captive portal in a coffee shop or hotel; or the device could have a perfect connection to a wifi router that isn't connected to anything else. Requests to your website may be being blocked or somehow mangled by a government or corporate proxy. Or, of course, the device could actually be completely offline.
 
-Rather than thinking in terms of offline and online, the way to deliver the best possible user experience is to aim to deliver a app startup time that is consistent and unaffected by the connection type or speed. In order to achieve this we're going to need some more app cache hacking. 
+Rather than thinking in terms of offline and online, the way to deliver the best possible user experience is to aim to deliver a app startup time that is consistent and unaffected by the connection type or speed. In order to achieve this we're going to need some more app cache hacking.
 
 ## More app cache hacking
 
@@ -513,7 +513,7 @@ function initialize(resources) {
 
     // Initalise appcache if app not in private browsing mode
     if (!iOSPrivateBrowsing) {
-        APP.appcache.start(iOSPrivateBrowsing);
+        APP.appcache.start();
     }
 
     // If we don't have resources, trigger a
@@ -638,7 +638,7 @@ return {
     startFromServer: startFromServer,
     route: route
 };
-``` 
+```
 
 
 
