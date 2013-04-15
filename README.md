@@ -2,28 +2,30 @@
 
 This is part 4 of a [tutorial series][A1] on how to make an FT style offline web app.
 
-We [left off last time][A2] with an app that delivers offline news on most modern browsers - and degrades gracefully on older browsers. But if we look back to our list of **ideas for further development** in the first tutorial we still have work to do to make it work just as well as a website as it does as an app.
+We [left off last time][A2] with an app that delivers offline news on most modern browsers - and degrades gracefully on older browsers. But if we look back to our list of **ideas for further development** in the [first tutorial][A3] we still have work to do to make it work just as well as a website as it does as an app.
 
 [A1]:http://labs.ft.com/category/tutorial/
 [A2]:http://net.tutsplus.com/tutorials/other/a-deeper-look-at-mod_rewrite-for-apache/
+[A3]:http://labs.ft.com/2012/08/basic-offline-html5-web-app/
 
 ## Requirements for the tutorial - Part 4
 
 - It should work even if the user's Javascript is disabled.
 - It should be crawl-able by search engines.
-- The first time a user uses the app the first load should be rendered on the server side.
-- We should use the [History API][B1] instead of hash tag URLs so that the URL in the user's browser address page always matches page that they are viewing.
+- The first time a user uses the app the first load should be rendered on the server side to improve the speed of that first load.
+- We should use the [History API][B1] instead of hash tag URLs so that the URL in the user's browser address page always matches the page that they are viewing.
 
 These might not sound like groundbreaking features - websites have been doing the first three since forever - but as usual the *HTML5 application cache* gets in the way.
 
-In this tutorial we will use [Apache's mod_rewrite][B2] via an .htaccess file. Mod rewrite is [already very widely documented][B4] so I will use it without much explanation. If you wish to use a different type of web server you may need to use a different URL rewriting technology.
+In this tutorial we will use [Apache's mod_rewrite][B2] via an .htaccess file in order to map all the article URLs (which are of the form yourapp.com/[integer]) to **/index.php**.
+
+Mod rewrite is already very widely documented so I will use it without much explanation. If you wish to use a different type of web server you may need to use a different URL rewriting technology.
 
 As always, the [full code is up on GitHub][B3].
 
 [B1]:http://diveintohtml5.info/history.html
-[B2]:http://labs.ft.com/2012/11/using-an-iframe-to-stop-app-cache-storing-masters/
+[B2]:http://httpd.apache.org/docs/current/mod/mod_rewrite.html
 [B3]:https://github.com/matthew-andrews/ft-style-offline-web-app-part-4
-[B4]:http://httpd.apache.org/docs/current/mod/mod_rewrite.html
 
 ## On and off - not always a switch
 
@@ -31,32 +33,34 @@ Product managers often come up with feature requests with descriptions along the
 
 Connections can be weak and very slow, they can be flaky - disconnecting frequently. Devices can even be tricked into thinking they're online when they're not - they could be behind a captive portal in a coffee shop or hotel; or the device could have a perfect connection to a wifi router that isn't connected to anything else. Requests to your website may be being blocked or somehow mangled by a government or corporate proxy. Or, of course, the device could actually be completely offline.
 
-Rather than thinking in terms of offline and online, the way to deliver the best possible user experience is to aim to deliver a app startup time that is consistent and unaffected by the connection type or speed. In order to achieve this we're going to need some more app cache hacking.
+Rather than thinking in terms of offline and online, the way to deliver the best possible user experience during that initial app boot phase up is to aim to deliver an app startup time that is consistent and unaffected by the connection type or speed. In order to achieve this we're going to need some more app cache hacking.
 
 ## More app cache hacking
 
-The only way you can have a consistent start up time in the face of a wild west of internet connection possibilities is to ensure your web app will prefer, **whenever possible**, load from the device's local application cache. To do this you have to ensure that the page that your app starts on is **explicitly cached** in the application cache manifest.
+The only way you can have a consistent start up time in the face of a wild west of internet connection possibilities is to ensure your web app will prefer, **whenever possible** load from the device's local application cache. To do this you have to ensure that the page which your app starts on is **explicitly cached** in the application cache manifest.
 
 At FT Labs we refer to this kind of application cache behaviour as *prefer offline*, where the application cache - if populated - will *always* be the preferred source for the app to load itself from, rather than the network. This means that the amount of time the demo app will take to start up will always be the same - no matter what kind of connection the user's device has to the internet.
 
-We can achieve this either by listing the root of the app explicitly in the ```CACHE``` section of the app cache manifest. Or, as we do in our demo app, listing it as the 2nd part of a fallback within the ```FALLBACK``` section.
+We can achieve this either by listing the root of the app explicitly in the `CACHE` section of the app cache manifest. Or, as we do in our demo app, listing it as the 2nd part of a fallback within the `FALLBACK` section.
 
 (In an ideal world we would like for the application cache to be configured so that every request (even ones not listed in the application cache) are *always* prefer offline unless we say otherwise but that is not currently possible with the current spec or any browser implementation :-(. Given the home page is the likeliest entry point to your application, we prioritise that.)
 
-This means the web server must serve the root of your application (in the FT's case that's ```http://app.ft.com/```) with the bootstrap code - explained in the first tutorial.
+This means the web server must serve the root of your application (in the FT's case that's `http://app.ft.com/`) with the bootstrap code - explained in the [first tutorial][C1].
 
 However, in order to achieve the server side render of the HTML for the first time the user visits the app (which makes for a much faster initial app start) that same application root URL sometimes also needs, in the case of our demo app, to return the current latest blog posts.
 
 To summarise:
 
-- When the app cache is doing its thing http://yourapp.com/ must be the bootstrap.
-- Otherwise http://yourapp.com/ should be the rendered HTML content.
+- When the app cache is doing its thing yourapp.com/ must be the bootstrap.
+- Otherwise yourapp.com/ should be the rendered HTML content.
 
 Given we have no Javascript control over either these requests (the former is made by the application cache's update mechanism, the latter by the user typing the URL into their browser / clicking a link from another site) we only have one solution.
 
+[C1]:labs.ft.com/2012/08/basic-offline-html5-web-app/
+
 ### The solution
 
-We already have quite precise control over how and when the application cache is loaded through the iframe solution implemented in the previous tutorial so solving this problem is actually quite easy.
+We already have quite precise control over how and when the application cache is loaded through the iframe (implemented in the previous tutorial) so solving this problem is actually quite easy.
 
 Before adding the iframe, simply set a cookie and when we receive a notification from the Javascript within that iframe (which is listening to the application cache events) that the application cache has finished updating we unset the cookie.
 
@@ -68,7 +72,7 @@ This is, of course, a monumental hack. But with the app cache as it is today it'
 
 Start by cloning ([or downloading][E1]) the GitHub repository from Part 3.
 
-```git clone git://github.com/matthew-andrews/ft-style-offline-web-app-part-3.git```
+`git clone git://github.com/matthew-andrews/ft-style-offline-web-app-part-3.git`
 
 [E1]:https://github.com/matthew-andrews/ft-style-offline-web-app-part-3
 
@@ -212,21 +216,21 @@ $appcacheUpdate = isset($_COOKIE['appcacheUpdate']);
 </html>
 ```
 
-As I explain above in the **More app cache hacking** section this file needs to be able to return the latest blog items for ordinary requests and it should return the bootstrap we created in [Tutorial 1][G1] when requested during an application cache update.
+As I explained above in the **More app cache hacking** section this file needs to be able to return the latest blog items for ordinary requests and it should return the bootstrap we created in [Tutorial 1][G1] when requested during an application cache update.
 
-We detect whether the cookie is set at the top of the file via the PHP ```isset``` function:-
+We detect whether the cookie is set at the top of the file via the PHP `isset` function:-
 
-```$appcacheUpdate = isset($_COOKIE['appcacheUpdate']);```
+`$appcacheUpdate = isset($_COOKIE['appcacheUpdate']);`
 
 The code we return if we're not doing an app cache update can be a normal web page that follows all the best practises, such as:
 
 - including the Javascript through a normal script tag that points to an external resource (we'll create this file in just a minute):-
 
-```<script type="text/javascript" src="<?php $appRoot; ?>api/resources/javascript.php"></script>```
+`<script type="text/javascript" src="<?php $appRoot; ?>api/resources/javascript.php"></script>`
 
 - and including the CSS again by pulling it in in the normal way from an external URL:-
 
-```<link href="<?php echo $appRoot; ?>css/global.css" media="all" rel="stylesheet" type="text/css" />```
+`<link href="<?php echo $appRoot; ?>css/global.css" media="all" rel="stylesheet" type="text/css" />`
 
 [G1]:http://labs.ft.com/2012/08/basic-offline-html5-web-app/
 
@@ -235,7 +239,7 @@ The code we return if we're not doing an app cache update can be a normal web pa
 ```
 <?php
 $js = '';
-$js .= file_get_contents('../../libraries/client/fastclick.js');
+$js = $js . file_get_contents('../../libraries/client/fastclick.js');
 $js = $js . 'var APP={}; (function (APP) {';
 $js = $js . file_get_contents('../../source/application/applicationcontroller.js');
 $js = $js . file_get_contents('../../source/articles/articlescontroller.js');
@@ -260,7 +264,7 @@ $appRoot = '/' . ltrim($appRoot . '/', '/');
 echo $js . 'APP_ROOT = "' . $appRoot . '";';
 ```
 
-This is almost the same logic as **/api/resources/index.php**, except that it only returns Javascript. ( **/api/resources/index.php** returns JSON encoded object with two keys - one, ```js``` containing the demo web app's Javascript and another, ```css``` containing its css).
+This is almost the same logic as **/api/resources/index.php**, except that it only returns Javascript. ( **/api/resources/index.php** returns JSON encoded object with two keys - one, `js` containing the demo web app's Javascript and another, `css` containing its css).
 
 ## Re-implement the demo app in PHP
 
@@ -344,9 +348,9 @@ class Article {
 }
 ```
 
-Much like **/sources/articles/article.js** the role of this class is to just return article data. If the ```get``` function is passed a parameter (and ID of the article) it will return a single article, otherwise it will return all the articles in the RSS feed.
+Much like **/sources/articles/article.js** the role of this class is to just return article data. If the `get` function is passed a parameter (and ID of the article) it will return a single article, otherwise it will return all the articles in the RSS feed.
 
-To make writing the explanations for the tutorial simpler to explain, I've not bothered to combine some of the logic in this file with the logic in **/api/articles/index.php** - even though it is almost exactly the same. The only difference is **/api/article/index.php** outputs a json encoded object - used by the Javascript in the demo app, whereas this file is will be used by other PHP files to get a PHP associative array containing article data.
+To simplify the explanations in this tutorial I've not bothered to combine some of the logic in this file with the logic in **/api/articles/index.php** - even though it is almost exactly the same. The only difference is **/api/article/index.php** outputs a json encoded object - used by the Javascript in the demo app, whereas this file will be used by other PHP files to get a PHP associative array containing article data.
 
 ### /server/articles/articlescontroller.php
 
@@ -372,7 +376,7 @@ class ArticlesController {
 }
 ```
 
-This code should look very similar to its corresponding Javascript file in **/sources/articles/articlescontroller.js**.
+This code should look very similar to the corresponding Javascript file in **/sources/articles/articlescontroller.js**.
 
 ### /server/templates.php
 
@@ -415,7 +419,7 @@ class Templates {
 }
 ```
 
-In this file we've reimplemented the logic inside **/sources/templates.js**. Rather than copying this file directly you could choose to copy the Javascript file and manually port the code to PHP. If you do this make sure to be careful replacing ```+```'s with ```.```'s.
+In this file we've reimplemented the logic inside **/sources/templates.js**. Rather than copying this file directly you could choose to copy the Javascript file and manually port the code to PHP. If you do this make sure to be careful replacing `+`'s with `.`'s.
 
 For example:-
 
@@ -435,7 +439,7 @@ $output .= '<li><a href="' . $this->_appRoot . $articles[$i]['id'] . '"><b>' . $
 
 As we discussed above with the **More hacking the app cache** section, we have two changes to make inside **/source/appcache.js**.
 
-The first change is to set the cookie inside the ```innerLoad``` function:-
+The first change is to set the cookie inside the `innerLoad` function:-
 
 ```
 function innerLoad() {
@@ -477,9 +481,9 @@ The changes to the application controller are a little more complicated. We want
 
 We need to make the following changes to the applicationcontroller.js file:
 
-- Add a new new class variable ```initialRenderOnServer```:-
-```var fastClick, iOSPrivateBrowsing, initialRenderOnServer;```
-- Replace the ```route``` function with one that is able to understand real URLs instead of hash tag URLs.
+- Add a new new class variable `initialRenderOnServer`:-
+`var fastClick, iOSPrivateBrowsing, initialRenderOnServer;`
+- Replace the `route` function with one that is able to understand real URLs instead of hash tag URLs.
 
 ```
 function route(page) {
@@ -504,7 +508,9 @@ function route(page) {
 
 Notice that we're also adding our code to hook into the **HTML5 History API** here.
 
-- Replace the ```initialise``` and ```start``` methods with ones that are able to either boot the app from our locally cached bootstrap (discussed in Tutorial 1) or if the whole page is loaded from the network.
+- Replace the `initialise` and `start` methods with ones that are able to boot the app either from our locally cached bootstrap (discussed in [Tutorial 1][R1]) or from the network.
+
+[R1]:labs.ft.com/2012/08/basic-offline-html5-web-app/
 
 ```
 function initialize(resources) {
@@ -638,7 +644,7 @@ function historyAPI() {
 }
 ```
 
-- And finally, we need to update our public API to explose the ```route``` and newly added ```startFromServer``` methods.
+- And finally, we need to update our public API to expose the `route` and newly added `startFromServer` methods.
 
 ```
 return {
@@ -700,9 +706,9 @@ APP.templates = (function () {
 }());
 ```
 
-The majority of the changes here are changing the URLs inside the each of the ```<a href="">```'s from using a hashtag URL to using a real URL (e.g. yourapp.com/#5 becomes yourapp/5).
+The majority of the changes here are changing the URLs inside the each of the `<a href="">`'s from using a hashtag URL to using a real URL (e.g. yourapp.com/#5 becomes yourapp/5).
 
-There's also a small change to the way the error handler works - previously it just redirected the user to the error page by calling ```window.location = '#error';``` but now since we aren't using hashtag URLs we have to call the route function instead.
+There's also a small change to the way the error handler works - previously it just redirected the user to the error page by calling `window.location = '#error';` but now since we aren't using hashtag URLs we have to call the route function instead.
 
 ## Wrapping up
 
@@ -714,7 +720,7 @@ Having to maintain two sets of files with identical logic wastes time as every f
 
 The codebase would be a lot neater and more manageable if we were able to *just* write the Javascript versions and then run that Javascript code on **both the server and client**.
 
-In 2009 Ryan Dahl created [NodeJS][Z1], which allows developers to do just that. In the next tutorial we will bid farewell to the web technologies of the past (PHP and .htaccess) and rebuild the app with the latest tools and techniques (Node, NPM, Grunt, BusterJS and more…).
+In 2009 Ryan Dahl created [NodeJS][Z1], which allows developers to do just that. In the next tutorial we will bid farewell to the web technologies of the past (PHP and Apache) and rebuild the app with the latest tools and techniques (Node, NPM, Grunt, BusterJS and more…).
 
 Finally, if you think you’d like to work on this sort of thing and live (or would like to live) in London, [we’re hiring][Z2]!
 
