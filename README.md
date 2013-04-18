@@ -12,7 +12,7 @@ We [left off last time][A2] with an app that delivers offline news on most moder
 
 - It should work even if the user's Javascript is disabled.
 - It should be crawl-able by search engines.
-- When the app id first loaded we should render server-side for optimum performance.
+- When the app is first loaded we should render server-side for optimum performance.
 - We should use the [History API][B1] instead of hash tag URLs so that the URL in the user's browser address page always matches the page that they are viewing.
 
 These might not sound like groundbreaking features - websites have been doing the first three since forever - but as usual the *HTML5 application cache* gets in the way.
