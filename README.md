@@ -12,7 +12,7 @@ We [left off last time][A2] with an app that delivers offline news on most moder
 
 - It should work even if the user's Javascript is disabled.
 - It should be crawl-able by search engines.
-- The first time a user uses the app the first load should be rendered on the server side to improve the speed of that first load.
+- When the app id first loaded we should render server-side for optimum performance.
 - We should use the [History API][B1] instead of hash tag URLs so that the URL in the user's browser address page always matches the page that they are viewing.
 
 These might not sound like groundbreaking features - websites have been doing the first three since forever - but as usual the *HTML5 application cache* gets in the way.
@@ -33,9 +33,9 @@ Product managers often come up with feature requests with descriptions along the
 
 Connections can be weak and very slow, they can be flaky - disconnecting frequently. Devices can even be tricked into thinking they're online when they're not - they could be behind a captive portal in a coffee shop or hotel; or the device could have a perfect connection to a wifi router that isn't connected to anything else. Requests to your website may be being blocked or somehow mangled by a government or corporate proxy. Or, of course, the device could actually be completely offline.
 
-Rather than thinking in terms of offline and online, the way to deliver the best possible user experience during that initial app boot phase up is to aim to deliver an app startup time that is consistent and unaffected by the connection type or speed. In order to achieve this we're going to need some more app cache hacking.
+Rather than thinking in terms of offline and online, the way to deliver the best possible user experience during that initial app boot phase up is to aim to deliver an app startup time that is consistent and unaffected by the connection type or speed. In order to achieve this we're going to need some more AppCache hacking.
 
-## More app cache hacking
+## More AppCache hacking
 
 The only way you can have a consistent start up time in the face of a wild west of internet connection possibilities is to ensure your web app will prefer, **whenever possible** load from the device's local application cache. To do this you have to ensure that the page which your app starts on is **explicitly cached** in the application cache manifest.
 
@@ -43,7 +43,7 @@ At FT Labs we refer to this kind of application cache behaviour as *prefer offli
 
 We can achieve this either by listing the root of the app explicitly in the `CACHE` section of the app cache manifest. Or, as we do in our demo app, listing it as the 2nd part of a fallback within the `FALLBACK` section.
 
-(In an ideal world we would like for the application cache to be configured so that every request (even ones not listed in the application cache) are *always* prefer offline unless we say otherwise but that is not currently possible with the current spec or any browser implementation :-(. Given the home page is the likeliest entry point to your application, we prioritise that.)
+(In an ideal world we would like for the application cache to be configured so that every request (even ones not listed in the application cache) are *always* prefer offline unless we say otherwise, but that is not currently possible with the current spec or any browser implementation :-(. Given the home page is the likeliest entry point to your application, we prioritise that.)
 
 This means the web server must serve the root of your application (in the FT's case that's `http://app.ft.com/`) with the bootstrap code - explained in the [first tutorial][C1].
 
@@ -51,7 +51,7 @@ However, in order to achieve the server side render of the HTML for the first ti
 
 To summarise:
 
-- When the app cache is doing its thing yourapp.com/ must be the bootstrap.
+- When the app cache is doing its thing yourapp.com/ must be the bootstrap *WP: I still don't know if 'bootstrap' is very self explanatory*.
 - Otherwise yourapp.com/ should be the rendered HTML content.
 
 Given we have no Javascript control over either these requests (the former is made by the application cache's update mechanism, the latter by the user typing the URL into their browser / clicking a link from another site) we only have one solution.
@@ -64,7 +64,7 @@ We already have quite precise control over how and when the application cache is
 
 Before adding the iframe, simply set a cookie and when we receive a notification from the Javascript within that iframe (which is listening to the application cache events) that the application cache has finished updating we unset the cookie.
 
-Then on the server side, within **/index.php**, if that cookie is set return the bootstrap otherwise return the latest blog posts.
+Then on the server side, within **/index.php**, if that cookie is set: return the bootstrap otherwise return the latest blog posts.
 
 This is, of course, a monumental hack. But with the app cache as it is today it's the best we can do.
 
