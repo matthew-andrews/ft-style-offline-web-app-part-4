@@ -51,12 +51,15 @@ However, in order to achieve the server side render of the HTML for the first ti
 
 To summarise:
 
-- When the app cache is doing its thing yourapp.com/ must be the bootstrap *WP: I still don't know if 'bootstrap' is very self explanatory*.
+- When the app cache is doing its thing yourapp.com/ must be the bootstrap*.
 - Otherwise yourapp.com/ should be the rendered HTML content.
 
 Given we have no Javascript control over either these requests (the former is made by the application cache's update mechanism, the latter by the user typing the URL into their browser / clicking a link from another site) we only have one solution.
 
-[C1]:labs.ft.com/2012/08/basic-offline-html5-web-app/
+\* By bootstrap I mean the bootstrap of the sort we described in [Tutorial 1][C1] - just enough Javascript and HTML to pull your Javascript's application logic out of `localStorage` and `eval` it but no more. Not to be confused with [any other kind of bootstrap][C2], of course.
+
+[C1]:http://labs.ft.com/2012/08/basic-offline-html5-web-app/
+[C2]:http://twitter.github.io/bootstrap/
 
 ### The solution
 
