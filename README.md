@@ -112,7 +112,7 @@ New files are highlighted in bold, changes to existing files not in bold.
 
 ### /index.php
 
-```
+```php
 <?php
 // Detect the app root (taken from api/resources/index.php)
 $appRoot = trim(dirname($_SERVER['SCRIPT_NAME']), '/');
@@ -223,7 +223,7 @@ The code we return if we're not doing an app cache update can be a normal web pa
 
 ### /api/resources/javascript.php
 
-```
+```php
 <?php
 $js = '';
 $js = $js . file_get_contents('../../libraries/client/fastclick.js');
@@ -259,7 +259,7 @@ The next step is to take the code we've written in Javascript and make it so tha
 
 ### /server/application/applicationcontroller.php
 
-```
+```php
 <?php
 require_once('server/articles/articlescontroller.php');
 
@@ -297,7 +297,7 @@ To keep things as simple as possible I've copied the same structure as the Javas
 
 ### /server/articles/article.php
 
-```
+```php
 <?php
 
 class Article {
@@ -341,7 +341,7 @@ To simplify the explanations in this tutorial I've not bothered to combine some 
 
 ### /server/articles/articlescontroller.php
 
-```
+```php
 <?php
 require_once('article.php');
 
@@ -367,7 +367,7 @@ This code should look very similar to the corresponding Javascript file in **/so
 
 ### /server/templates.php
 
-```
+```php
 <?php
 class Templates {
     private $_appRoot;
@@ -410,13 +410,13 @@ In this file we've reimplemented the logic inside **/sources/templates.js**. Rat
 
 For example:-
 
-```
+```javascript
 output = output + '<li><a href="' + APP_ROOT + articles[i].id + '"><b>' + articles[i].headline + '</b><br />By ' + articles[i].author + ' on ' + articles[i].date + '</a></li>';
 ```
 
 Becomes:-
 
-```
+```php
 $output .= '<li><a href="' . $this->_appRoot . $articles[$i]['id'] . '"><b>' . $articles[$i]['headline'] . '</b><br />By ' . $articles[$i]['author'] . ' on ' . $articles[$i]['date'] . '</a></li>';
 ```
 
@@ -428,7 +428,7 @@ As we discussed above with the **More hacking the app cache** section, we have t
 
 The first change is to set the cookie inside the `innerLoad` function:-
 
-```
+```javascript
 function innerLoad() {
 
 	// 5 minutes in the future
@@ -444,7 +444,7 @@ function innerLoad() {
 
 And the second change is to unset that same cookie once we know the appcache update process is complete:-
 
-```
+```javascript
 function logEvent(evtcode, hasChecked) {
 	var s = statuses[evtcode], loaderEl, cookieExpires;
 	if (hasChecked || s === 'timeout') {
@@ -469,10 +469,16 @@ The changes to the application controller are a little more complicated. We want
 We need to make the following changes to the applicationcontroller.js file:
 
 - Add a new new class variable `initialRenderOnServer`:-
-`var fastClick, iOSPrivateBrowsing, initialRenderOnServer;`
+
+```javascript
+var fastClick,
+	iOSPrivateBrowsing,
+	initialRenderOnServer;
+```
+
 - Replace the `route` function with one that is able to understand real URLs instead of hash tag URLs.
 
-```
+```javascript
 function route(page) {
     if (page) {
         page = page.replace(new RegExp('^' + APP_ROOT), '');
@@ -499,7 +505,7 @@ Notice that we're also adding our code to hook into the **HTML5 History API** he
 
 [R1]:labs.ft.com/2012/08/basic-offline-html5-web-app/
 
-```
+```javascript
 function initialize(resources) {
 
     // Listen to the URL link clicks
@@ -594,7 +600,7 @@ function start(resources, storeResources, contentAlreadyLoaded) {
 
 - We need to add a new function that handles the app if it is starting up after being downloaded directly from the server (as opposed to from the app cache).
 
-```
+```javascript
 function startFromServer() {
 
     // As a bare minimum we need History API to
@@ -611,7 +617,7 @@ function startFromServer() {
 
 - We've borrowed a little code from the very excellent Modernizr - to detect whether we can *actually use* the HTML5 History API.
 
-```
+```javascript
 // Detection of history API, 'borrowed' from Modernizr
 function historyAPI() {
     var ua = navigator.userAgent;
@@ -633,7 +639,7 @@ function historyAPI() {
 
 - And finally, we need to update our public API to expose the `route` and newly added `startFromServer` methods.
 
-```
+```javascript
 return {
     start: start,
     startFromServer: startFromServer,
@@ -645,7 +651,7 @@ return {
 
 ### /source/templates.js
 
-```
+```javascript
 APP.templates = (function () {
     'use strict';
 
