@@ -17,10 +17,6 @@ We [left off last time][A2] with an app that delivers offline news on most moder
 
 These might not sound like groundbreaking features - websites have been doing the first three since forever - but as usual the *HTML5 application cache* gets in the way.
 
-In this tutorial we will use [Apache's mod_rewrite][B2] via an .htaccess file in order to map all the article URLs (which are of the form yourapp.com/[integer]) to **/index.php**.
-
-Mod rewrite is already very widely documented so I will use it without much explanation. If you wish to use a different type of web server you may need to use a different URL rewriting technology.
-
 As always, the [full code is up on GitHub][B3].
 
 [B1]:http://diveintohtml5.info/history.html
@@ -83,9 +79,6 @@ Start by cloning ([or downloading][E1]) the GitHub repository from Part 3.
 
 <table>
 	<tr>
-		<td><strong>/.htaccess</strong></td>
-	</tr>
-	<tr>
 		<td><strong>/api/resources/javascript.php</strong></td>
 	</tr>
 	<tr>
@@ -116,15 +109,6 @@ Start by cloning ([or downloading][E1]) the GitHub repository from Part 3.
 
 New files are highlighted in bold, changes to existing files not in bold.
 
-### /.htaccess
-```
-<IfModule mod_rewrite.c>
-RewriteEngine On
-RewriteRule ^([0-9]+) index.php [L]
-</IfModule>
-```
-
-A simple .htaccess rewrite rule matching the style used in the client side app code. This should ensure all requests to the main page of the app or article will be pushed through the index.php file.
 
 ### /index.php
 
