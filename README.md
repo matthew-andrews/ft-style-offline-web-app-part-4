@@ -211,7 +211,7 @@ We detect whether the cookie is set at the top of the file via the PHP `isset` f
 
 The code we return if we're not doing an app cache update can be a normal web page that follows all the best practises, such as:
 
-# - including the Javascript through a normal script tag that points to an external resource (we'll create this file in just a minute):-
+- including the Javascript through a normal script tag that points to an external resource (we'll create this file in just a minute):-
 
 `<script type="text/javascript" src="<?php $appRoot; ?>api/resources/javascript.php"></script>`
 
