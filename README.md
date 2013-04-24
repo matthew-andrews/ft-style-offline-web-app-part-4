@@ -555,7 +555,7 @@ function start(resources, storeResources, contentAlreadyLoaded) {
     // Try to detect whether iOS private browsing mode is enabled
     try {
         localStorage.test = '';
-        localStorage.removeItem('item');
+        localStorage.removeItem('test');
     } catch (exception) {
         if (exception.code === 22) {
             iOSPrivateBrowsing = true;
