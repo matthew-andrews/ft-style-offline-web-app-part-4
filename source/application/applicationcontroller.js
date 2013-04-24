@@ -93,12 +93,12 @@ APP.applicationController = (function () {
 
     // This is to our webapp what main() is to C, $(document).ready is to jQuery, etc
     function start(resources, storeResources, contentAlreadyLoaded) {
-    	initialRenderOnServer = contentAlreadyLoaded;
+        initialRenderOnServer = contentAlreadyLoaded;
 
         // Try to detect whether iOS private browsing mode is enabled
         try {
             localStorage.test = '';
-            localStorage.removeItem('item');
+            localStorage.removeItem('test');
         } catch (exception) {
             if (exception.code === 22) {
                 iOSPrivateBrowsing = true;
