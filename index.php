@@ -65,7 +65,7 @@ $appcacheUpdate = isset($_COOKIE['appcacheUpdate']);
 		</script>
 		<?php } else { ?>
 		<link href="<?php echo $appRoot; ?>css/global.css" media="all" rel="stylesheet" type="text/css" />
-		<script type="text/javascript" src="<?php $appRoot; ?>api/resources/javascript.php"></script>
+		<script type="text/javascript" src="<?php echo $appRoot; ?>api/resources/javascript.php"></script>
 		<script type="text/javascript">
 		$(document).ready(function () {
 			APP.applicationController.startFromServer();
